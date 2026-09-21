@@ -260,6 +260,18 @@ body {
     margin-bottom: 18px;
   }
 
+  .menu {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    padding: 7px;
+  }
+
+  .hub-title {
+    margin-left: 8px;
+    margin-right: auto;
+  }
+
   .page-head {
     margin-bottom: 12px;
   }
@@ -308,6 +320,10 @@ body {
 
   .topbar {
     border-radius: 14px;
+  }
+
+  .hub-title {
+    font-size: 11px;
   }
 
   .page-head h1 {
