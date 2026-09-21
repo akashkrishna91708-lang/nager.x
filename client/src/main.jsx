@@ -9,19 +9,10 @@ import './styles.css';
 
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
-		navigator.serviceWorker.register('/sw.js').then(registration => {
-			registration.update();
-			const notifyUpdate = () => {
-				if (registration.waiting && navigator.serviceWorker.controller) window.dispatchEvent(new Event('nagerx-update-available'));
-			};
-			if (registration.waiting) setTimeout(notifyUpdate, 0);
-			registration.addEventListener('updatefound', () => registration.installing?.addEventListener('statechange', notifyUpdate));
-			navigator.serviceWorker.addEventListener('controllerchange', () => {
-				window.location.reload();
-			});
-		}).catch(error => {
-			console.error('Service worker registration failed:', error);
-		});
+		Promise.all([
+			navigator.serviceWorker.getRegistrations().then(registrations => Promise.all(registrations.map(registration => registration.unregister()))),
+			'caches' in window ? caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key)))) : Promise.resolve()
+		]).catch(error => console.error('NagarX cache cleanup failed:', error));
 	});
 }
 
