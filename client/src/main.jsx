@@ -16,7 +16,7 @@ if ('serviceWorker' in navigator) {
 	});
 }
 
-const API = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? '/api' : 'https://nagerx.onrender.com/api');
+const API = import.meta.env.VITE_API_URL || '/api';
 const authStorage = window.sessionStorage;
 const readResponse = async response => {
 	const text = await response.text();
