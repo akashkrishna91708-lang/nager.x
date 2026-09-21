@@ -14,7 +14,7 @@ if ('serviceWorker' in navigator) {
 			const notifyUpdate = () => {
 				if (registration.waiting && navigator.serviceWorker.controller) window.dispatchEvent(new Event('nagerx-update-available'));
 			};
-			if (registration.waiting) notifyUpdate();
+			if (registration.waiting) setTimeout(notifyUpdate, 0);
 			registration.addEventListener('updatefound', () => registration.installing?.addEventListener('statechange', notifyUpdate));
 			navigator.serviceWorker.addEventListener('controllerchange', () => {
 				window.location.reload();
