@@ -45,9 +45,12 @@ const app = express();
 const allowedOrigins = new Set([
   ...((process.env.CLIENT_URL || '').split(',').map(origin => origin.trim()).filter(Boolean)),
   'http://localhost:5173',
-  'http://127.0.0.1:5173'
+  'http://127.0.0.1:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5174'
 ]);
-app.use(cors({ origin: (origin, callback) => !origin || allowedOrigins.has(origin) ? callback(null, true) : callback(new Error('Origin not allowed by CORS')) }));
+const isAllowedOrigin = origin => !origin || allowedOrigins.has(origin) || /^https:\/\/[-a-z0-9]+(?:-[a-z0-9]+)*-\d+\.app\.github\.dev$/i.test(origin) || /^https:\/\/[-a-z0-9]+\.github\.dev$/i.test(origin);
+app.use(cors({ origin: (origin, callback) => isAllowedOrigin(origin) ? callback(null, true) : callback(null, false) }));
 app.use(express.json());
 const tokenFor = user => jwt.sign(user,process.env.JWT_SECRET||'local-secret',{expiresIn:'7d'});
 const auth = (req,res,next) => { try { req.user=jwt.verify(req.headers.authorization?.split(' ')[1],process.env.JWT_SECRET||'local-secret'); next(); } catch { res.status(401).json({error:'Authentication required'}); } };
