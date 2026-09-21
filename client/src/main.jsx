@@ -33,7 +33,8 @@ const readResponse = async response => {
 	try {
 		return JSON.parse(text);
 	} catch {
-		throw new Error(`NagarX returned an invalid response (${response.status}).`);
+		if (response.status >= 500) throw new Error(`NagarX server is unavailable (${response.status}). Please refresh and try again.`);
+		throw new Error(`NagarX returned an unexpected response (${response.status}). Please open the current app URL and sign in again.`);
 	}
 };
 const fetcher = async (path, options = {}) => {
