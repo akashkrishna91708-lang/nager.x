@@ -1,9 +1,12 @@
-const CACHE_NAME = 'nagerx-v6';
+const CACHE_NAME = 'nagerx-v8';
 const ASSETS = ['/', '/index.html', '/manifest.json', '/favicon.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
-  self.skipWaiting();
+});
+
+self.addEventListener('message', event => {
+  if (event.data === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
