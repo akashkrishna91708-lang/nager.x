@@ -14,7 +14,12 @@ if ('serviceWorker' in navigator) {
 }
 
 try {
-	if (localStorage.nagerxUser) JSON.parse(localStorage.nagerxUser);
+	const storedUser = localStorage.nagerxUser;
+	const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+	if (parsedUser && (!parsedUser.name || !parsedUser.email || !['Citizen', 'Authority', 'Logistics'].includes(parsedUser.role))) {
+		localStorage.removeItem('nagerxUser');
+		localStorage.removeItem('nagerxToken');
+	}
 } catch {
 	localStorage.removeItem('nagerxUser');
 	localStorage.removeItem('nagerxToken');
