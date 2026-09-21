@@ -1,6 +1,6 @@
 {
-  "name": "NagerX City Hub",
-  "short_name": "NagerX",
+  "name": "NagarX City Hub",
+  "short_name": "NagarX",
   "description": "Smart city mobility dashboard for citizens, authorities, and logistics teams.",
   "start_url": ".",
   "display": "standalone",

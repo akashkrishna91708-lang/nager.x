@@ -1,6 +1,6 @@
-# NagerX
+# NagarX
 
-NagerX — Smarter Cities. Better Mobility.
+NagarX — Smarter Cities. Better Mobility.
 
 Local full-stack smart-city mobility platform for Citizens, Authorities, and Logistics teams. The application uses React/Vite/Tailwind/Leaflet in the browser and Express/SQLite/JWT in a local Node.js API.
 
