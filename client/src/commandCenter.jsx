@@ -971,9 +971,11 @@ function Incidents({ incidents, onRefresh, role }) {
   });
   const [message, setMessage] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const submit = async (event) => {
     event.preventDefault();
     setMessage("");
+    setSubmitting(true);
     try {
       await request("/incidents", {
         method: "POST",
@@ -985,9 +987,11 @@ function Incidents({ incidents, onRefresh, role }) {
       });
       setForm({ ...form, description: "" });
       setMessage("Incident added to the City Hub and authority alert feed.");
-      onRefresh();
+      await onRefresh();
     } catch (error) {
       setMessage(error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
   const updateStatus = async (id, status) => {
@@ -1068,7 +1072,7 @@ function Incidents({ incidents, onRefresh, role }) {
               />
             </label>
             {message && <div className="notice">{message}</div>}
-            <button className="primary full">Submit incident</button>
+            <button className="primary full" type="submit" disabled={submitting}>{submitting ? "Submitting report..." : "Submit incident"}</button>
           </form>}
         </Panel>
         <Panel eyebrow="LIVE QUEUE" title="Recent incidents">
