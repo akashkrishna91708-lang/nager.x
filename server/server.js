@@ -76,4 +76,4 @@ if (fs.existsSync(clientDist)) {
   app.use(express.static(clientDist));
   app.get('*', (req, res, next) => req.path.startsWith('/api/') ? next() : res.sendFile(path.join(clientDist, 'index.html')));
 }
-app.listen(process.env.PORT||5000, '0.0.0.0', ()=>console.log(`NagarX API running on http://localhost:${process.env.PORT||5000}`));
+app.listen(process.env.PORT||5000, '127.0.0.1', ()=>console.log(`NagarX API running on http://localhost:${process.env.PORT||5000}`));
