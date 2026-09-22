@@ -419,6 +419,60 @@ body {
   background: #1d8d79;
 }
 
+.install-help-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2300;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(9, 33, 31, 0.42);
+}
+
+.install-help {
+  position: relative;
+  width: min(100%, 390px);
+  padding: 28px;
+  border: 1px solid #cfe5dd;
+  border-radius: 20px;
+  background: #fff;
+  color: #244848;
+  box-shadow: 0 24px 70px rgba(9, 33, 31, 0.24);
+}
+
+.install-help h2 {
+  margin: 18px 0 8px;
+  font: 700 24px/1.15 "Trebuchet MS", sans-serif;
+}
+
+.install-help p,
+.install-help small {
+  display: block;
+  line-height: 1.55;
+}
+
+.install-help p {
+  margin: 0 0 10px;
+}
+
+.install-help small {
+  color: #6b8580;
+}
+
+.install-help-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf7f2;
+  color: #176d5b;
+  font-size: 22px;
+  line-height: 1;
+}
+
 .app-update {
   position: fixed;
   top: 18px;
@@ -743,13 +797,24 @@ textarea {
 }
 
 .brief-stack > div {
+  display: grid;
   gap: 5px;
   padding: 17px 24px;
 }
 
+.brief-label,
 .brief-stack strong,
 .brief-stack small {
+  display: block;
   line-height: 1.4;
+}
+
+.brief-label {
+  margin-bottom: 2px;
+}
+
+.mobile-only {
+  display: none;
 }
 
 .incident-row,
@@ -773,6 +838,10 @@ textarea {
 @media (max-width: 720px) {
   .main {
     padding: 12px 12px 28px;
+  }
+
+  .mobile-only {
+    display: grid;
   }
 
   .topbar {

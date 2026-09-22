@@ -261,14 +261,19 @@ function DemoBadge() {
 }
 function InstallAppButton() {
   const [prompt, setPrompt] = useState(null);
+  const [help, setHelp] = useState(false);
   useEffect(() => {
     const capture = (event) => { event.preventDefault(); setPrompt(event); };
     window.addEventListener("beforeinstallprompt", capture);
     return () => window.removeEventListener("beforeinstallprompt", capture);
   }, []);
-  if (!prompt) return null;
-  const install = async () => { await prompt.prompt(); await prompt.userChoice; setPrompt(null); };
-  return <button className="install-app" onClick={install} aria-label="Install NagarX app"><Download size={15} /> Install NagarX</button>;
+  const install = async () => {
+    if (!prompt) { setHelp(true); return; }
+    await prompt.prompt();
+    await prompt.userChoice;
+    setPrompt(null);
+  };
+  return <><button className="install-app" onClick={install} aria-label="Install NagarX app"><Download size={15} /> Install NagarX</button>{help && <div className="install-help-backdrop" onClick={() => setHelp(false)}><section className="install-help" role="dialog" aria-modal="true" aria-labelledby="install-title" onClick={(event) => event.stopPropagation()}><button className="install-help-close" onClick={() => setHelp(false)} aria-label="Close install instructions">×</button><span className="brand-mark small">NX</span><h2 id="install-title">Install NagarX</h2><p>Open your browser menu and choose <strong>Install NagarX</strong> or <strong>Add to Home Screen</strong>.</p><small>Chrome and Edge show an install option near the address bar. On iPhone, use Safari Share and choose Add to Home Screen.</small></section></div>}</>;
 }
 function PageHead({ eyebrow, title, copy, action }) {
   return (
