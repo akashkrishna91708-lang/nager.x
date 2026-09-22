@@ -1148,16 +1148,18 @@ export default function CommandCenter() {
     routes: [],
     analytics: null,
     alerts: [],
+    system: null,
   });
   const load = async () => {
-    const [incidents, traffic, routes, analytics, alerts] = await Promise.all([
+    const [incidents, traffic, routes, analytics, alerts, system] = await Promise.all([
       request("/incidents"),
       request("/traffic"),
       request("/routes"),
       request("/analytics"),
       request("/alerts"),
+      request("/system/status"),
     ]);
-    setData({ incidents, traffic, routes, analytics, alerts });
+    setData({ incidents, traffic, routes, analytics, alerts, system });
   };
   useEffect(() => {
     const token = authStorage.nagerxToken;
@@ -1261,7 +1263,7 @@ export default function CommandCenter() {
           </div>
           <div className="top-actions">
             <span className="api-status">
-              <span /> Local API connected
+              <span /> {data.system?.production_ready ? "Connected data services" : "Local data mode"}
             </span>
             <Bell size={18} />
           </div>
