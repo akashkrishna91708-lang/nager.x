@@ -776,6 +776,26 @@ textarea {
   }
 }
 
+@media (max-width: 520px) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .install-app {
+    top: auto;
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    min-height: 42px;
+    padding: 10px 14px;
+  }
+
+  .app-update {
+    top: auto;
+    right: 14px;
+    bottom: calc(66px + env(safe-area-inset-bottom));
+  }
+}
+
 .profile-form button:disabled {
   cursor: wait;
   opacity: .65;
