@@ -68,8 +68,12 @@ The frontend API URL is centralized in `client/.env` as `VITE_API_URL=/api` for 
 
 `GET /api/traffic`, `GET /api/routes`, `POST /api/routes`, `GET /api/analytics`, `GET /api/notifications`, `GET /api/health`
 
+`GET /api/system/status` reports whether external storage, Redis, maps, traffic, GTFS, ML and optimization integrations are configured. Local development intentionally reports `production_ready: false` until those services are connected.
+
 Authenticated endpoints use `Authorization: Bearer <token>`. Authority-only incident changes are role protected. SQLite is seeded with 10 incidents, 10 traffic records, 5 routes, and 3 users. Maps use Leaflet and OpenStreetMap data; no paid services are used.
 
 ## Limitations
 
 Route planning is clearly labelled as a local demo calculation and does not provide turn-by-turn routing. Traffic records are seeded local snapshots rather than a live city feed. Performance claims in the UI are labelled “Pilot Target / Illustrative Metric” and are not proven results.
+
+See [docs/production-readiness.md](docs/production-readiness.md) for the current architecture audit, environment contract and the services still required for a real-data deployment.

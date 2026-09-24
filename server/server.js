@@ -55,10 +55,12 @@ app.use(express.json());
 const tokenFor = user => jwt.sign(user,process.env.JWT_SECRET||'local-secret',{expiresIn:'7d'});
 const auth = (req,res,next) => { try { req.user=jwt.verify(req.headers.authorization?.split(' ')[1],process.env.JWT_SECRET||'local-secret'); next(); } catch { res.status(401).json({error:'Authentication required'}); } };
 const roles = (...allowed) => (req,res,next) => allowed.includes(req.user.role) ? next() : res.status(403).json({error:'Insufficient permissions'});
+const integrationStatus = () => ({mode:process.env.DATA_MODE||'local',storage:{provider:process.env.DATABASE_URL?'external database':'SQLite local fallback',configured:Boolean(process.env.DATABASE_URL)},cache:{provider:'Redis',configured:Boolean(process.env.REDIS_URL)},traffic:{provider:'External traffic adapter',configured:Boolean(process.env.TRAFFIC_API_KEY)},maps:{provider:'Server-side maps adapter',configured:Boolean(process.env.MAPS_API_KEY)},transit:{provider:'GTFS / GTFS-Realtime',configured:Boolean(process.env.GTFS_STATIC_URL||process.env.GTFS_REALTIME_URL)},ml:{provider:'External prediction service',configured:Boolean(process.env.ML_SERVICE_URL),model_version:process.env.MODEL_VERSION||null},optimization:{provider:'OR-Tools service',configured:false}});
 const demoPredictions = { mode:'Pilot Simulation', current:{label:'Moderate',score:58}, windows:[{label:'Next 30 min',pressure:'High',score:76},{label:'Next 1 hour',pressure:'High',score:82},{label:'Next 2 hours',pressure:'Moderate',score:64}], hotspots:[{name:'Knowledge Park II',current:'High',predicted:'Critical',time:'18 min',action:'Divert through Alpha 1'},{name:'Pari Chowk',current:'Moderate',predicted:'High',time:'32 min',action:'Meter incoming traffic'},{name:'Kasna Junction',current:'Critical',predicted:'High',time:'Now',action:'Keep alternate corridor open'}] };
 const demoTransit = [{mode:'Bus',route:'101',next:'Pari Chowk',eta:6,crowding:'Moderate',status:'On schedule'},{mode:'Bus',route:'203',next:'Knowledge Park II',eta:11,crowding:'Low',status:'On schedule'},{mode:'Metro',route:'Blue Line',next:'Noida Sector 18',eta:4,crowding:'High',status:'Minor delay'},{mode:'Metro',route:'Aqua Line',next:'Alpha 1',eta:8,crowding:'Moderate',status:'On schedule'}];
 const demoDeliveries = [['NX-D01','Gaur City','High',8.4],['NX-D02','Techzone 4','Medium',12.1],['NX-D03','Sector 18','High',15.8],['NX-D04','Pari Chowk','Low',5.2],['NX-D05','Knowledge Park II','Critical',9.7],['NX-D06','Alpha 1','Medium',6.6],['NX-D07','Kasna','High',10.4],['NX-D08','Gaur City','Low',7.1],['NX-D09','Techzone 4','Medium',13.2],['NX-D10','Pari Chowk','Low',4.8],['NX-D11','Sector 18','High',17.5],['NX-D12','Alpha 1','Medium',7.8]].map(([id,location,priority,distance])=>({id,location,priority,distance}));
 app.get('/api/health',(_,res)=>res.json({status:'ok',message:'NagarX API is running'}));
+app.get('/api/system/status',(_,res)=>{const integrations=integrationStatus();res.json({status:'ok',integrations,production_ready:integrations.mode==='production'&&integrations.storage.configured&&integrations.cache.configured&&integrations.traffic.configured&&integrations.maps.configured&&integrations.transit.configured&&integrations.ml.configured});});
 app.get('/api/predictions',auth,(_,res)=>res.json(demoPredictions));
 app.get('/api/transit',auth,(_,res)=>res.json({mode:'Demo Simulation',items:demoTransit}));
 app.get('/api/deliveries',auth,(_,res)=>res.json({mode:'Illustrative Result',orders:demoDeliveries}));
@@ -85,4 +87,6 @@ if (fs.existsSync(clientDist)) {
   app.use(express.static(clientDist));
   app.get('*', (req, res, next) => req.path.startsWith('/api/') ? next() : res.sendFile(path.join(clientDist, 'index.html')));
 }
-app.listen(process.env.PORT||5000, '127.0.0.1', ()=>console.log(`NagarX API running on http://localhost:${process.env.PORT||5000}`));
+const port = Number(process.env.PORT || 5000);
+const host = process.env.HOST || '0.0.0.0';
+app.listen(port, host, ()=>console.log(`NagarX API running on http://localhost:${port} and available on the local network`));
